@@ -5,14 +5,12 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { FontLoader } from 'three/examples/jsm/loaders/FontLoader';
 import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry';
 import { RectAreaLightHelper } from 'three/examples/jsm/helpers/RectAreaLightHelper';
-import gsap from 'gsap';
-import * as dat from 'dat.gui';
+import Stats from 'three/examples/jsm/libs/stats.module.js'
 import { GUI } from 'lil-gui';
-import * as CANNON from 'cannon';
 import { Perlin } from './utils/perlin';
 const sizes = {
-  width: 1200,
-  height: 800
+  width: window.innerWidth,
+  height: window.innerHeight
 }
 const createSphere = (radius, position) => {
 
@@ -24,21 +22,23 @@ function App() {
     //scane camera renderer
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(75, sizes.width / sizes.height, 0.1, 1000);
-    camera.position.z = 0.5;
-    camera.position.y = 0.4;
+    camera.position.z = 1;
+    camera.position.y = 0.6;
     scene.add(camera);
     const renderer = new THREE.WebGLRenderer({ canvas: canvasRef.current });
     renderer.setSize(sizes.width, sizes.height);
     renderer.shadowMap.enabled = true;//开启阴影
     renderer.shadowMap.type = THREE.PCFSoftShadowMap;
     const axesHelper = new THREE.AxesHelper(5);
-    scene.add(axesHelper);
+    // scene.add(axesHelper);
+    const stats = new Stats();
+    document.body.appendChild(stats.dom);
     const clock = new THREE.Clock();
     let oldElapsedTime = 0;
     const controls = new OrbitControls(camera, renderer.domElement);
     // controls.enableDamping = true;
     const perlin = new Perlin();
-    const geometry = new THREE.PlaneGeometry(2, 2, 72, 72);//平面
+    const geometry = new THREE.PlaneGeometry(4, 3, 72, 72);//平面
     const count = geometry.attributes.position.count;
 
     const randoms = new Float32Array(count);
@@ -92,7 +92,7 @@ function App() {
       wireframe: true,
       // transparent: true,
       uniforms: {//传递uniform，材料的全局变量
-        zScale: { value: 0.2 },
+        zScale: { value: 0.5 },
         toColor: { value: new THREE.Color('#e0c3fc') },
         fromColor: { value: new THREE.Color('#8ec5fc') },
       },
@@ -110,7 +110,7 @@ function App() {
     };
     const gui = new GUI();
     //样式文件夹
-    const materialFolder = gui.addFolder('material');
+    const materialFolder = gui.addFolder('material-材料');
     materialFolder.add(material, 'wireframe');
     materialFolder.add(material.uniforms.zScale, 'value').min(0).max(1).step(0.01).name('zScale');
     materialFolder.addColor(material.uniforms.toColor, 'value').name('toColor');
@@ -120,12 +120,12 @@ function App() {
     //大小
 
     //camera文件夹
-    const cameraFolder = gui.addFolder('camera');
+    const cameraFolder = gui.addFolder('camera-相机');
     cameraFolder.add(camera.position, 'x').min(-5).max(5).step(0.01).name('x');
     cameraFolder.add(camera.position, 'y').min(-5).max(5).step(0.01).name('y');
     cameraFolder.add(camera.position, 'z').min(-5).max(5).step(0.01).name('z');
     //fbm文件夹
-    const fbmFolder = gui.addFolder('fbm');
+    const fbmFolder = gui.addFolder('fbm-多个噪声合成');
     fbmFolder.add(fbm, 'octaves').min(1).max(10).step(1).name('octaves');
     fbmFolder.add(fbm, 'lacunarity').min(0.1).max(2).step(0.01).name('lacunarity');
     fbmFolder.add(fbm, 'gain').min(0.1).max(2).step(0.01).name('gain');
@@ -133,6 +133,7 @@ function App() {
     fbmFolder.add(fbm, 'amplitude').min(0).max(10).step(0.01).name('amplitude');
 
 
+    
 
     const tick = () => {
       const elapsedTime = clock.getElapsedTime();
@@ -145,6 +146,7 @@ function App() {
       geometry.setAttribute('aRandom', new THREE.BufferAttribute(randoms, 1));//设置点的属性，参数是数据和每个点的属性数量
 
       renderer.render(scene, camera);
+      stats.update();
       window.requestAnimationFrame(tick);
     }
     tick();

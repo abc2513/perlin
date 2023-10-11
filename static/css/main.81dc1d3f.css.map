@@ -1,0 +1,1 @@
+{"version":3,"file":"static/css/main.81dc1d3f.css","mappings":"AAAA,iBACE,qBAAsB,CACtB,QAAS,CACT,SACF","sources":["App.css"],"sourcesContent":["*, *::before, *::after{\n  box-sizing: border-box;\n  margin: 0;\n  padding: 0;\n}\n.App canvas{\n  /* max-width: min(100vw,calc(100vh * 4 / 3));\n  max-height: min(100vh,calc(100vw * 3 / 4)); */\n}"],"names":[],"sourceRoot":""}

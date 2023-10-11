@@ -23,7 +23,7 @@ function App() {
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(75, sizes.width / sizes.height, 0.1, 1000);
     camera.position.z = 1;
-    camera.position.y = 0.6;
+    camera.position.y = 0.8;
     scene.add(camera);
     const renderer = new THREE.WebGLRenderer({ canvas: canvasRef.current });
     renderer.setSize(sizes.width, sizes.height);
@@ -92,9 +92,9 @@ function App() {
       wireframe: true,
       // transparent: true,
       uniforms: {//传递uniform，材料的全局变量
-        zScale: { value: 0.5 },
-        toColor: { value: new THREE.Color('#e0c3fc') },
-        fromColor: { value: new THREE.Color('#8ec5fc') },
+        zScale: { value: 0.6 },
+        toColor: { value: new THREE.Color('#fb91fb') },
+        fromColor: { value: new THREE.Color('#83f9fc') },
       },
       side: THREE.DoubleSide,
     });
